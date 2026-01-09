@@ -1,0 +1,371 @@
+<?php
+require_once 'config.php';
+requireLogin();
+$currentUser = getCurrentUser();
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Sistem Pemantauan Kualitas Udara dalam Ruangan</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="assets/img/clouds.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+    rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="assets/css/style.css" rel="stylesheet">
+
+  <script src="jquery/jquery.min.js"></script>
+
+  <style>
+    /* tambahan styling kecil untuk header suhu/kelembaban */
+    .time-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .time-row .left {
+      flex: 1;
+    }
+
+    .time-row .right {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .header-sensor {
+      text-align: right;
+    }
+
+    .header-sensor .suhu-large {
+      font-size: 1.6rem;
+      font-weight: 600;
+    }
+
+    .header-sensor .hum-small {
+      font-size: 1rem;
+      color: #555;
+      margin-left: 0.5rem;
+    }
+
+    @media (max-width:767px) {
+      .time-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .time-row .right {
+        justify-content: flex-start;
+      }
+
+      .header-sensor {
+        text-align: left;
+      }
+    }
+  </style>
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      // update semua nilai tiap 3 detik
+      function updateAll() {
+        // suhu -> load ke elemen #suhu (yang sudah ada di header)
+        $.get("suhu.php", function (data) {
+          $("#suhu").text($.trim(data)); // header suhu
+        });
+
+        // kelembaban -> ambil sekali dan set ke dua tempat:
+        $.get("kelembaban.php", function (data) {
+          var v = $.trim(data);
+          $("#kelembaban").text(v);            // di card (icon-box)
+          $("#kelembaban_header").text(v);     // di header sebelah suhu
+        });
+
+        // lain-lain tetap load normal (co, co2, debu, kualitas, himbauan)
+        $("#co").load("co.php");
+        $("#co2").load("co2.php");
+        $("#debu").load("debu.php");
+        $("#kualitas").load("keterangan.php");
+        $("#himbauan").load("himbauan.php");
+      }
+
+      // jalankan segera dan interval
+      updateAll();
+      setInterval(updateAll, 3000);
+    });
+  </script>
+
+</head>
+
+<body>
+  <?php date_default_timezone_set("Asia/Jakarta"); ?>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top">
+    <div class="container d-flex align-items-center justify-content-between">
+
+      <h1 class="logo"><a href=".">Pemantau Kualitas Udara dalam Ruangan</a></h1>
+
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li><a class="nav-link" href=".">Home</a></li>
+          <li><a class="nav-link" href="history.php">History</a></li>
+          <li class="dropdown">
+            <a href="#"><i class="bi bi-person-circle"></i> <?= htmlspecialchars($currentUser['nama']) ?> <i
+                class="bi bi-chevron-down"></i></a>
+            <ul>
+              <li><a href="logout.php"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+            </ul>
+          </li>
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+    </div>
+  </header><!-- End Header -->
+
+  <!-- ======= Hero Section ======= -->
+  <section id="hero" class="d-flex align-items-center">
+    <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
+
+      <!-- time + suhu+kelembaban row -->
+      <div class="row mb-3">
+        <div class="col-12">
+          <div class="time-row">
+            <div class="left">
+              <h3><span id="waktu"><?php echo date('H:i:s'); ?></span></h3>
+            </div>
+            <div class="right header-sensor">
+              <!-- suhu utama di header (ID #suhu dipakai oleh ajax) -->
+              <div style="display:inline-block;">
+                <span class="suhu-large"><span id="suhu">0</span>°C</span>
+              </div>
+              <!-- kelembaban header (ID baru #kelembaban_header) -->
+              <div style="display:inline-block;">
+                <span class="hum-small">| Kelembaban: <span id="kelembaban_header">0</span>%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row justify-content-center">
+        <div class="col-xl-7 col-lg-9 text-center">
+          <div class="card text-center">
+            <div class="card-body">
+              <span id="kualitas"></span>
+            </div>
+          </div>
+          <h2><span id="himbauan">dapat beraktivitas dengan baik</span></h2>
+        </div>
+      </div>
+
+      <div class="row icon-boxes mt-4">
+        <div class="col-md-6 col-lg-4" data-aos="zoom-in" data-aos-delay="200">
+          <div class="counts icon-box">
+            <div class="count-box">
+              <span id="co">0</span>
+              <h3>ppm</h3>
+              <p>Karbon Monoksida (CO)</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4" data-aos="zoom-in" data-aos-delay="300">
+          <div class="icon-box">
+            <div class="counts">
+              <div class="count-box">
+                <span id="co2">0</span>
+                <h3>ppm</h3>
+                <p>Karbon Dioksida (CO2)</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Debu -->
+        <div class="col-md-6 col-lg-4" data-aos="zoom-in" data-aos-delay="500">
+          <div class="icon-box">
+            <div class="counts">
+              <div class="count-box">
+                <span id="debu">0</span>
+                <h3>mg/m3</h3>
+                <p>Debu (PM10)</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- START Control panel -->
+        <div class="col-12 mt-4" data-aos="fade-up" data-aos-delay="400">
+          <div class="control-card-modern">
+            <div class="control-header">
+              <div class="control-icon">
+                <i class="bi bi-sliders"></i>
+              </div>
+              <div class="control-title">
+                <h5>Kontrol Perangkat</h5>
+                <span class="control-subtitle">Atur mode dan perangkat</span>
+              </div>
+              <div class="control-status-badge" id="statusBadge">
+                <i class="bi bi-circle-fill"></i>
+                <span id="controlStatus">loading...</span>
+              </div>
+            </div>
+
+            <div class="control-body">
+              <!-- Mode Control -->
+              <div class="control-item">
+                <div class="control-item-header">
+                  <i class="bi bi-gear-wide-connected"></i>
+                  <span>Mode Operasi</span>
+                </div>
+                <div class="control-buttons">
+                  <button id="modeAuto" class="ctrl-btn ctrl-btn-auto">
+                    <i class="bi bi-robot"></i>
+                    <span>Auto</span>
+                  </button>
+                  <button id="modeManual" class="ctrl-btn ctrl-btn-manual">
+                    <i class="bi bi-hand-index"></i>
+                    <span>Manual</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Purifier Control -->
+              <div class="control-item">
+                <div class="control-item-header">
+                  <i class="bi bi-wind"></i>
+                  <span>Air Purifier</span>
+                </div>
+                <div class="control-buttons">
+                  <button id="purOn" class="ctrl-btn ctrl-btn-on">
+                    <i class="bi bi-power"></i>
+                    <span>ON</span>
+                  </button>
+                  <button id="purOff" class="ctrl-btn ctrl-btn-off">
+                    <i class="bi bi-stop-circle"></i>
+                    <span>OFF</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Humidifier Control -->
+              <div class="control-item">
+                <div class="control-item-header">
+                  <i class="bi bi-droplet-half"></i>
+                  <span>Humidifier</span>
+                </div>
+                <div class="control-buttons">
+                  <button id="humOn" class="ctrl-btn ctrl-btn-on">
+                    <i class="bi bi-power"></i>
+                    <span>ON</span>
+                  </button>
+                  <button id="humOff" class="ctrl-btn ctrl-btn-off">
+                    <i class="bi bi-stop-circle"></i>
+                    <span>OFF</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <script>
+          function ajaxSet(params, cb) {
+            $.get("control_set.php", params)
+              .done(function (resp) { if (cb) cb(null, resp); })
+              .fail(function (xhr) { if (cb) cb(xhr); });
+          }
+
+          function refreshControlStatus() {
+            $.get("get_control.php").done(function (resp) {
+              $("#controlStatus").text(resp);
+              // Update badge color based on mode
+              if (resp.includes('auto')) {
+                $("#statusBadge").removeClass('manual').addClass('auto');
+              } else {
+                $("#statusBadge").removeClass('auto').addClass('manual');
+              }
+            }).fail(function () { $("#controlStatus").text("Error"); });
+          }
+
+          $(function () {
+            $("#modeAuto").click(() => ajaxSet({ mode: 'auto' }, refreshControlStatus));
+            $("#modeManual").click(() => ajaxSet({ mode: 'manual' }, refreshControlStatus));
+
+            $("#purOn").click(() => ajaxSet({ purifier: 1, mode: 'manual' }, refreshControlStatus));
+            $("#purOff").click(() => ajaxSet({ purifier: 0, mode: 'manual' }, refreshControlStatus));
+            $("#humOn").click(() => ajaxSet({ humidifier: 1, mode: 'manual' }, refreshControlStatus));
+            $("#humOff").click(() => ajaxSet({ humidifier: 0, mode: 'manual' }, refreshControlStatus));
+
+            refreshControlStatus();
+            setInterval(refreshControlStatus, 5000);
+          });
+        </script>
+        <!-- END Control panel -->
+
+
+      </div> <!-- akhir row icon-boxes -->
+
+    </div>
+  </section>
+
+
+  <!-- ======= Footer ======= -->
+  <script src="assets/vendor/purecounter/purecounter.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+
+  <script type="text/javascript">
+    // jam live
+    window.onload = function () { waktu(); }
+    function waktu() {
+      var e = document.getElementById('waktu'),
+        d = new Date(), h, m, s;
+      h = d.getHours();
+      m = setZero(d.getMinutes());
+      s = setZero(d.getSeconds());
+
+      e.innerHTML = h + ':' + m + ':' + s;
+
+      setTimeout(waktu, 1000);
+    }
+    function setZero(e) {
+      e = e < 10 ? '0' + e : e;
+      return e;
+    }
+  </script>
+
+  <!-- Template Main JS File -->
+  <script src="assets/js/main.js"></script>
+
+</body>
+
+</html>

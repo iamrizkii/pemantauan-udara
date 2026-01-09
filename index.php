@@ -294,10 +294,101 @@ $currentUser = getCurrentUser();
         </div>
 
         <script>
-          function ajaxSet(params, cb) {
+          // Play notification sound
+          function playNotifSound() {
+            try {
+              var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+              var oscillator = audioCtx.createOscillator();
+              var gainNode = audioCtx.createGain();
+              
+              oscillator.connect(gainNode);
+              gainNode.connect(audioCtx.destination);
+              
+              oscillator.frequency.value = 800; // Hz
+              oscillator.type = 'sine';
+              gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+              gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+              
+              oscillator.start(audioCtx.currentTime);
+              oscillator.stop(audioCtx.currentTime + 0.3);
+            } catch(e) {
+              console.log('Audio not supported');
+            }
+          }
+          
+          // Toast notification function
+          function showToast(message, type) {
+            // Remove existing toast
+            $('.toast-notification').remove();
+            
+            // Play sound
+            playNotifSound();
+            
+            // Create toast element with different colors based on type
+            var iconClass, bgColor;
+            switch(type) {
+              case 'success': // ON actions - Green
+                iconClass = 'bi-check-circle-fill';
+                bgColor = 'linear-gradient(135deg, #00c853, #00a844)';
+                break;
+              case 'warning': // OFF actions - Red/Orange
+                iconClass = 'bi-x-circle-fill';
+                bgColor = 'linear-gradient(135deg, #ff5252, #d32f2f)';
+                break;
+              case 'info': // Mode changes - Blue
+                iconClass = 'bi-gear-fill';
+                bgColor = 'linear-gradient(135deg, #2487ce, #1e6ca6)';
+                break;
+              default:
+                iconClass = 'bi-info-circle-fill';
+                bgColor = 'linear-gradient(135deg, #6c757d, #495057)';
+            }
+            
+            var toast = $('<div class="toast-notification">' +
+              '<i class="bi ' + iconClass + '"></i>' +
+              '<span>' + message + '</span>' +
+            '</div>');
+            
+            toast.css({
+              'position': 'fixed',
+              'bottom': '30px',
+              'right': '30px',
+              'background': bgColor,
+              'color': 'white',
+              'padding': '16px 24px',
+              'border-radius': '12px',
+              'box-shadow': '0 10px 40px rgba(0,0,0,0.3)',
+              'display': 'flex',
+              'align-items': 'center',
+              'gap': '12px',
+              'font-family': 'Poppins, sans-serif',
+              'font-size': '14px',
+              'font-weight': '500',
+              'z-index': '9999',
+              'animation': 'slideInRight 0.4s ease'
+            });
+            
+            $('body').append(toast);
+            
+            // Auto hide after 3 seconds
+            setTimeout(function() {
+              toast.css('animation', 'slideOutRight 0.4s ease');
+              setTimeout(function() {
+                toast.remove();
+              }, 400);
+            }, 3000);
+          }
+          
+          function ajaxSet(params, message, type, cb) {
             $.get("control_set.php", params)
-              .done(function (resp) { if (cb) cb(null, resp); })
-              .fail(function (xhr) { if (cb) cb(xhr); });
+              .done(function (resp) { 
+                showToast(message, type);
+                if (cb) cb(null, resp); 
+              })
+              .fail(function (xhr) { 
+                showToast('Gagal mengubah pengaturan!', 'error');
+                if (cb) cb(xhr); 
+              });
           }
 
           function refreshControlStatus() {
@@ -344,18 +435,29 @@ $currentUser = getCurrentUser();
           }
 
           $(function () {
-            $("#modeAuto").click(() => ajaxSet({ mode: 'auto' }, refreshControlStatus));
-            $("#modeManual").click(() => ajaxSet({ mode: 'manual' }, refreshControlStatus));
+            $("#modeAuto").click(() => ajaxSet({ mode: 'auto' }, '⚙ Mode Auto diaktifkan', 'info', refreshControlStatus));
+            $("#modeManual").click(() => ajaxSet({ mode: 'manual' }, '⚙ Mode Manual diaktifkan', 'default', refreshControlStatus));
 
-            $("#purOn").click(() => ajaxSet({ purifier: 1, mode: 'manual' }, refreshControlStatus));
-            $("#purOff").click(() => ajaxSet({ purifier: 0, mode: 'manual' }, refreshControlStatus));
-            $("#humOn").click(() => ajaxSet({ humidifier: 1, mode: 'manual' }, refreshControlStatus));
-            $("#humOff").click(() => ajaxSet({ humidifier: 0, mode: 'manual' }, refreshControlStatus));
+            $("#purOn").click(() => ajaxSet({ purifier: 1, mode: 'manual' }, '✓ Air Purifier dinyalakan', 'success', refreshControlStatus));
+            $("#purOff").click(() => ajaxSet({ purifier: 0, mode: 'manual' }, '✕ Air Purifier dimatikan', 'warning', refreshControlStatus));
+            $("#humOn").click(() => ajaxSet({ humidifier: 1, mode: 'manual' }, '✓ Humidifier dinyalakan', 'success', refreshControlStatus));
+            $("#humOff").click(() => ajaxSet({ humidifier: 0, mode: 'manual' }, '✕ Humidifier dimatikan', 'warning', refreshControlStatus));
 
             refreshControlStatus();
             setInterval(refreshControlStatus, 5000);
           });
         </script>
+        
+        <style>
+          @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+          }
+          @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+          }
+        </style>
         <!-- END Control panel -->
 
 

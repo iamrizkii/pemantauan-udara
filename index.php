@@ -303,12 +303,43 @@ $currentUser = getCurrentUser();
           function refreshControlStatus() {
             $.get("get_control.php").done(function (resp) {
               $("#controlStatus").text(resp);
-              // Update badge color based on mode
-              if (resp.includes('auto')) {
+              
+              // Parse response: mode=manual&purifier=0&humidifier=0
+              var params = {};
+              resp.split('&').forEach(function(pair) {
+                var kv = pair.split('=');
+                params[kv[0]] = kv[1];
+              });
+              
+              // Update Mode buttons
+              if (params.mode === 'auto') {
+                $("#modeAuto").addClass('active');
+                $("#modeManual").removeClass('active');
                 $("#statusBadge").removeClass('manual').addClass('auto');
               } else {
+                $("#modeAuto").removeClass('active');
+                $("#modeManual").addClass('active');
                 $("#statusBadge").removeClass('auto').addClass('manual');
               }
+              
+              // Update Purifier buttons
+              if (params.purifier === '1') {
+                $("#purOn").addClass('active');
+                $("#purOff").removeClass('active');
+              } else {
+                $("#purOn").removeClass('active');
+                $("#purOff").addClass('active');
+              }
+              
+              // Update Humidifier buttons
+              if (params.humidifier === '1') {
+                $("#humOn").addClass('active');
+                $("#humOff").removeClass('active');
+              } else {
+                $("#humOn").removeClass('active');
+                $("#humOff").addClass('active');
+              }
+              
             }).fail(function () { $("#controlStatus").text("Error"); });
           }
 

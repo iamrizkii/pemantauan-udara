@@ -294,10 +294,44 @@ $currentUser = getCurrentUser();
         </div>
 
         <script>
+          // Audio context for notifications (mobile-friendly)
+          var audioCtx = null;
+          var audioUnlocked = false;
+          
+          // Unlock audio on first user interaction (required for mobile)
+          function unlockAudio() {
+            if (audioUnlocked) return;
+            try {
+              audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+              // Create silent buffer to unlock
+              var buffer = audioCtx.createBuffer(1, 1, 22050);
+              var source = audioCtx.createBufferSource();
+              source.buffer = buffer;
+              source.connect(audioCtx.destination);
+              source.start(0);
+              audioUnlocked = true;
+              console.log('Audio unlocked!');
+            } catch(e) {
+              console.log('Audio unlock failed');
+            }
+          }
+          
+          // Listen for first interaction to unlock audio
+          document.addEventListener('click', unlockAudio, { once: true });
+          document.addEventListener('touchstart', unlockAudio, { once: true });
+          
           // Play notification sound
           function playNotifSound() {
             try {
-              var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+              if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+              }
+              
+              // Resume if suspended (mobile requirement)
+              if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+              }
+              
               var oscillator = audioCtx.createOscillator();
               var gainNode = audioCtx.createGain();
               

@@ -4,7 +4,7 @@
 
 header('Content-Type: text/plain; charset=utf-8');
 
-$connect = mysqli_connect("localhost", "root", "", "skripsi");
+$connect = mysqli_connect("localhost", "u182036527_udarasehat", "Fatihur5*", "u182036527_udarasehat");
 if (!$connect) {
     echo "Server DB error";
     exit;
@@ -43,8 +43,8 @@ if (!$data) {
 $keterangan = isset($data['keterangan']) ? trim($data['keterangan']) : '';
 
 // opsional: baca nilai-nilai yang mungkin berguna
-$co   = isset($data['co']) ? $data['co'] : null;
-$co2  = isset($data['co2']) ? $data['co2'] : null;
+$co = isset($data['co']) ? $data['co'] : null;
+$co2 = isset($data['co2']) ? $data['co2'] : null;
 $debu = isset($data['debu']) ? $data['debu'] : null;
 $suhu = isset($data['suhu']) ? $data['suhu'] : null;
 $kelembaban = isset($data['kelembaban']) ? $data['kelembaban'] : null;
@@ -65,9 +65,12 @@ if (strcasecmp($keterangan, 'Baik') === 0) {
     if ($co !== null || $co2 !== null || $debu !== null) {
         // contoh aturan sederhana fallback:
         $warning = false;
-        if (is_numeric($co2) && $co2 > 1000) $warning = true;
-        if (is_numeric($co) && $co >= 8.73) $warning = true;
-        if (is_numeric($debu) && $debu > 45) $warning = true;
+        if (is_numeric($co2) && $co2 > 1000)
+            $warning = true;
+        if (is_numeric($co) && $co >= 8.73)
+            $warning = true;
+        if (is_numeric($debu) && $debu > 45)
+            $warning = true;
 
         if ($warning) {
             $himbauan = "Beberapa parameter melebihi ambang aman — kurangi aktivitas berat dan gunakan purifier.";

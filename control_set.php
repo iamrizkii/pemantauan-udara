@@ -1,7 +1,7 @@
 <?php
 // control_set.php
 // Mengubah mode / nilai purifier / humidifier
-$connect = mysqli_connect("localhost","root","","skripsi");
+$connect = mysqli_connect("localhost", "u182036527_udarasehat", "Fatihur5*", "u182036527_udarasehat");
 if (!$connect) {
     http_response_code(500);
     die("DB connect error");
@@ -23,7 +23,7 @@ $id = intval($row['id']);
 // Build update clause
 $updates = [];
 if ($mode !== null && ($mode === 'auto' || $mode === 'manual')) {
-    $updates[] = "mode = '".mysqli_real_escape_string($connect, $mode)."'";
+    $updates[] = "mode = '" . mysqli_real_escape_string($connect, $mode) . "'";
 }
 if ($purifier !== null) {
     $val = ($purifier ? 1 : 0);
@@ -35,7 +35,7 @@ if ($humidifier !== null) {
 }
 
 if (count($updates) > 0) {
-    $sql = "UPDATE controls SET ".implode(", ", $updates)." WHERE id = $id";
+    $sql = "UPDATE controls SET " . implode(", ", $updates) . " WHERE id = $id";
     $ok = mysqli_query($connect, $sql);
     if ($ok) {
         echo "OK";

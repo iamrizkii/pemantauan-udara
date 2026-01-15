@@ -1,5 +1,5 @@
 <?php
-$connect = mysqli_connect("localhost","root","","skripsi");
+$connect = mysqli_connect("localhost", "u182036527_udarasehat", "Fatihur5*", "u182036527_udarasehat");
 $sql = mysqli_query($connect, "SELECT debu FROM sensor ORDER BY id_sensor DESC LIMIT 1");
 $data = mysqli_fetch_assoc($sql);
 $debu = isset($data['debu']) ? $data['debu'] : 0;

@@ -1,7 +1,7 @@
 <?php
 // keterangan.php (disesuaikan untuk keterangan "Baik" / "Buruk")
 
-$connect = mysqli_connect("localhost", "root", "", "skripsi");
+$connect = mysqli_connect("localhost", "u182036527_udarasehat", "Fatihur5*", "u182036527_udarasehat");
 if (!$connect) {
     echo "<div class='error'><h1>DB connection error</h1></div>";
     exit;

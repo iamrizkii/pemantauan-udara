@@ -5,7 +5,7 @@
 
 header('Content-Type: text/plain; charset=utf-8');
 
-$connect = mysqli_connect("localhost","root","","skripsi");
+$connect = mysqli_connect("localhost", "u182036527_udarasehat", "Fatihur5*", "u182036527_udarasehat");
 if (!$connect) {
     http_response_code(500);
     echo "mode=auto&purifier=0&humidifier=0";
@@ -31,7 +31,8 @@ if (!$data) {
 
 // Normalisasi nilai
 $mode = isset($data['mode']) ? strtolower(trim($data['mode'])) : 'auto';
-if ($mode !== 'manual') $mode = 'auto'; // hanya 'manual' atau 'auto'
+if ($mode !== 'manual')
+    $mode = 'auto'; // hanya 'manual' atau 'auto'
 
 // Pastikan purifier/humidifier numeric (0 atau 1)
 $purifier = isset($data['purifier']) ? intval($data['purifier']) : 0;

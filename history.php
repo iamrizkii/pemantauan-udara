@@ -72,8 +72,9 @@ $currentUser = getCurrentUser();
         <ul>
           <li><a class="nav-link" href=".">Home</a></li>
           <li><a class="nav-link" href="history.php">History</a></li>
-        <li class="dropdown">
-            <a href="#"><i class="bi bi-person-circle"></i> <?= htmlspecialchars($currentUser['nama']) ?> <i class="bi bi-chevron-down"></i></a>
+          <li class="dropdown">
+            <a href="#"><i class="bi bi-person-circle"></i> <?= htmlspecialchars($currentUser['nama']) ?> <i
+                class="bi bi-chevron-down"></i></a>
             <ul>
               <li><a href="logout.php"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
             </ul>
@@ -100,7 +101,7 @@ $currentUser = getCurrentUser();
 
           <?php
           // koneksi DB
-          $connect = mysqli_connect("localhost", "root", "", "skripsi");
+          $connect = mysqli_connect("localhost", "u182036527_udarasehat", "Fatihur5*", "u182036527_udarasehat");
           if (!$connect) {
             die('<div class="alert alert-danger">Database connection failed: ' . mysqli_connect_error() . '</div>');
           }
@@ -191,16 +192,16 @@ $currentUser = getCurrentUser();
             $nomor = $halaman_awal + 1;
             while ($d = mysqli_fetch_array($sql)) {
               ?>
-                <tr>
-                  <td><?= $nomor++ ?></td>
-                  <td><?= $d['waktu'] ?></td>
-                  <td><?= $d['suhu'] ?></td>
-                  <td><?= $d['co'] ?></td>
-                  <td><?= $d['co2'] ?></td>
-                  <td><?= $d['kelembaban'] ?></td>
-                  <td><?= $d['debu'] ?></td>
-                  <td><?= $d['keterangan'] ?></td>
-                </tr>
+              <tr>
+                <td><?= $nomor++ ?></td>
+                <td><?= $d['waktu'] ?></td>
+                <td><?= $d['suhu'] ?></td>
+                <td><?= $d['co'] ?></td>
+                <td><?= $d['co2'] ?></td>
+                <td><?= $d['kelembaban'] ?></td>
+                <td><?= $d['debu'] ?></td>
+                <td><?= $d['keterangan'] ?></td>
+              </tr>
 
               <?php
             }

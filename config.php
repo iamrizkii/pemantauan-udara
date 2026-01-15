@@ -9,12 +9,13 @@ session_start();
 
 // Database configuration
 define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_NAME', 'skripsi');
+define('DB_USER', 'u182036527_udarasehat');
+define('DB_PASS', 'Fatihur5*');
+define('DB_NAME', 'u182036527_udarasehat');
 
 // Database connection
-function getConnection() {
+function getConnection()
+{
     $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
     if (!$conn) {
         die('Koneksi database gagal: ' . mysqli_connect_error());
@@ -23,12 +24,14 @@ function getConnection() {
 }
 
 // Check if user is logged in
-function isLoggedIn() {
+function isLoggedIn()
+{
     return isset($_SESSION['user_id']) && !empty($_SESSION['user_id']);
 }
 
 // Require login - redirect to login page if not authenticated
-function requireLogin() {
+function requireLogin()
+{
     if (!isLoggedIn()) {
         header('Location: login.php');
         exit;
@@ -36,7 +39,8 @@ function requireLogin() {
 }
 
 // Get current user info
-function getCurrentUser() {
+function getCurrentUser()
+{
     if (isLoggedIn()) {
         return [
             'id' => $_SESSION['user_id'],

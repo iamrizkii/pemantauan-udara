@@ -5,33 +5,35 @@
 include 'config.php';
 
 // koneksi DB
-$connect = mysqli_connect("localhost", "root", "", "skripsi");
+$connect = mysqli_connect("localhost", "u182036527_udarasehat", "Fatihur5*", "u182036527_udarasehat");
 if (!$connect) {
     http_response_code(500);
     die("DB connect error");
 }
 
 // helper
-function to_num($v) {
-    if ($v === null || $v === '') return null;
+function to_num($v)
+{
+    if ($v === null || $v === '')
+        return null;
     $v = str_replace(',', '.', $v);
     return is_numeric($v) ? floatval($v) : null;
 }
 
 // ambil parameter
-$suhu       = isset($_GET['suhu']) ? trim($_GET['suhu']) : null;
-$co         = isset($_GET['co']) ? trim($_GET['co']) : null;
-$co2        = isset($_GET['co2']) ? trim($_GET['co2']) : null;
+$suhu = isset($_GET['suhu']) ? trim($_GET['suhu']) : null;
+$co = isset($_GET['co']) ? trim($_GET['co']) : null;
+$co2 = isset($_GET['co2']) ? trim($_GET['co2']) : null;
 $kelembaban = isset($_GET['kelembaban']) ? trim($_GET['kelembaban']) : null;
-$debu       = isset($_GET['debu']) ? trim($_GET['debu']) : null;
+$debu = isset($_GET['debu']) ? trim($_GET['debu']) : null;
 $ultrasonic = isset($_GET['ultrasonic']) ? trim($_GET['ultrasonic']) : null;
 
 // convert to numeric
-$suhu       = to_num($suhu);
-$co         = to_num($co);
-$co2        = to_num($co2);
+$suhu = to_num($suhu);
+$co = to_num($co);
+$co2 = to_num($co2);
 $kelembaban = to_num($kelembaban);
-$debu       = to_num($debu);
+$debu = to_num($debu);
 $ultrasonic = to_num($ultrasonic);
 
 // minimal: harus ada minimal satu parameter
@@ -47,10 +49,10 @@ if ($suhu === null && $co === null && $co2 === null && $kelembaban === null && $
 if ($co !== null || $co2 !== null || $kelembaban !== null || $debu !== null || $suhu !== null) {
 
     // siapkan nilai untuk INSERT ke tabel sensor
-    $co_v         = ($co !== null ? $co : 0.0);
-    $co2_v        = ($co2 !== null ? $co2 : 0.0);
+    $co_v = ($co !== null ? $co : 0.0);
+    $co2_v = ($co2 !== null ? $co2 : 0.0);
     $kelembaban_v = ($kelembaban !== null ? $kelembaban : 0.0);
-    $debu_v       = ($debu !== null ? $debu : 0.0);
+    $debu_v = ($debu !== null ? $debu : 0.0);
 
     // sensor: co, co2, debu, kelembaban, keterangan, waktu
     // di sini kita isi dulu co, co2, kelembaban, debu
@@ -73,8 +75,8 @@ if ($co !== null || $co2 !== null || $kelembaban !== null || $debu !== null || $
 
     // simpan suhu (jika ada) ke tabel suhu (terpisah)
     if ($suhu !== null) {
-        $id_sensor_v = (int)$id_sensor;
-        $suhu_v      = (float)$suhu;
+        $id_sensor_v = (int) $id_sensor;
+        $suhu_v = (float) $suhu;
         $stmt2 = $connect->prepare("INSERT INTO suhu (id_sensor, suhu) VALUES (?, ?)");
         if ($stmt2) {
             $stmt2->bind_param('id', $id_sensor_v, $suhu_v);
@@ -90,34 +92,46 @@ if ($co !== null || $co2 !== null || $kelembaban !== null || $debu !== null || $
        ========================== */
 
     // Ambang batas (samakan dengan yang di ESP32)
-    function ok_co2($v) { return ($v !== null && $v <= 1000.0); }   // ppm
-    function ok_co($v)  { return ($v !== null && $v < 8.73); }      // ppm
-    function ok_debu($v){ return ($v !== null && $v <= 45.0); }     // ug/m3
+    function ok_co2($v)
+    {
+        return ($v !== null && $v <= 1000.0);
+    }   // ppm
+    function ok_co($v)
+    {
+        return ($v !== null && $v < 8.73);
+    }      // ppm
+    function ok_debu($v)
+    {
+        return ($v !== null && $v <= 45.0);
+    }     // ug/m3
 
-    $present  = 0;      // jumlah parameter inti yang terbaca (CO, CO2, Debu)
+    $present = 0;      // jumlah parameter inti yang terbaca (CO, CO2, Debu)
     $bad_list = [];     // parameter inti yang melewati ambang
-    $missing  = [];     // parameter inti yang tidak terbaca
+    $missing = [];     // parameter inti yang tidak terbaca
 
     // HANYA 3 PARAMETER INTI: co, co2, debu
-    if ($co2 === null) { 
-        $missing[] = 'co2'; 
-    } else { 
-        $present++; 
-        if (!ok_co2($co2)) $bad_list[] = 'co2'; 
+    if ($co2 === null) {
+        $missing[] = 'co2';
+    } else {
+        $present++;
+        if (!ok_co2($co2))
+            $bad_list[] = 'co2';
     }
 
-    if ($co === null) { 
-        $missing[] = 'co'; 
-    } else { 
-        $present++; 
-        if (!ok_co($co)) $bad_list[] = 'co'; 
+    if ($co === null) {
+        $missing[] = 'co';
+    } else {
+        $present++;
+        if (!ok_co($co))
+            $bad_list[] = 'co';
     }
 
-    if ($debu === null) { 
-        $missing[] = 'debu'; 
-    } else { 
-        $present++; 
-        if (!ok_debu($debu)) $bad_list[] = 'debu'; 
+    if ($debu === null) {
+        $missing[] = 'debu';
+    } else {
+        $present++;
+        if (!ok_debu($debu))
+            $bad_list[] = 'debu';
     }
 
     // Tentukan keterangan:
@@ -184,13 +198,14 @@ if ($ultrasonic !== null) {
     $cooldown_file = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "ultrasonic_last_alert.txt";
     $can_alert = true;
     if (file_exists($cooldown_file)) {
-        $last = (int)file_get_contents($cooldown_file);
-        if (time() - $last < $ALERT_COOLDOWN) $can_alert = false;
+        $last = (int) file_get_contents($cooldown_file);
+        if (time() - $last < $ALERT_COOLDOWN)
+            $can_alert = false;
     }
     if ($ultrasonic < $LIMIT_CM && $can_alert) {
         $message = "🚨 *ALERT ULTRASONIC* 🚨\nJarak terlalu dekat: " . $ultrasonic . " cm\nSegera periksa area!";
         if (defined('TELEGRAM_BOT_TOKEN') && defined('TELEGRAM_CHAT_ID')) {
-            $url = "https://api.telegram.org/bot".TELEGRAM_BOT_TOKEN."/sendMessage";
+            $url = "https://api.telegram.org/bot" . TELEGRAM_BOT_TOKEN . "/sendMessage";
             $post_fields = [
                 'chat_id' => TELEGRAM_CHAT_ID,
                 'text' => $message,
@@ -204,7 +219,7 @@ if ($ultrasonic !== null) {
             curl_setopt($ch, CURLOPT_TIMEOUT, 5);
             $res = curl_exec($ch);
             curl_close($ch);
-            @file_put_contents($cooldown_file, (string)time());
+            @file_put_contents($cooldown_file, (string) time());
         } else {
             error_log("TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID not defined in config.php");
         }
@@ -213,14 +228,16 @@ if ($ultrasonic !== null) {
 
 // Response akhir
 if ($ultrasonic !== null) {
-    $resp = "Ultrasonic saved | distance: ".$ultrasonic." cm";
-    if ($ultrasonic < (isset($LIMIT_CM) ? $LIMIT_CM : 0)) $resp .= " (alert if allowed)";
+    $resp = "Ultrasonic saved | distance: " . $ultrasonic . " cm";
+    if ($ultrasonic < (isset($LIMIT_CM) ? $LIMIT_CM : 0))
+        $resp .= " (alert if allowed)";
     echo $resp;
 } else {
     if (isset($keterangan)) {
         // kirim ringkas: Baik / Buruk / Tidak Lengkap (+ catatan parameter inti)
         $response = $keterangan;
-        if (!empty($catatan)) $response .= " ($catatan)";
+        if (!empty($catatan))
+            $response .= " ($catatan)";
         echo $response;
     } else {
         echo "OK";

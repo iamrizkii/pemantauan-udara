@@ -10,7 +10,7 @@ $currentUser = getCurrentUser();
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Sistemm Pemantauan Kualitas Udara dalam Ruangan</title>
+  <title>Sistem Pemantauan Kualitas Udara dalam Ruangan</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -159,13 +159,13 @@ $currentUser = getCurrentUser();
               <h3><span id="waktu"><?php echo date('H:i:s'); ?></span></h3>
             </div>
             <div class="right header-sensor">
-              <!-- suhu utama di header (ID #suhu dipakai oleh ajax) -->
-              <div style="display:inline-block;">
+              <!-- suhu utama di header (ID #suhu dipakai oleh ajax, hidden dari tampilan) -->
+              <div style="display:none;">
                 <span class="suhu-large"><span id="suhu">0</span>°C</span>
               </div>
               <!-- kelembaban header (ID baru #kelembaban_header) -->
               <div style="display:inline-block;">
-                <span class="hum-small">| Kelembaban: <span id="kelembaban_header">0</span>%</span>
+                <span class="hum-small">Kelembaban: <span id="kelembaban_header">0</span>%</span>
               </div>
             </div>
           </div>
@@ -185,11 +185,13 @@ $currentUser = getCurrentUser();
 
       <div class="row icon-boxes mt-4">
         <div class="col-md-6 col-lg-4" data-aos="zoom-in" data-aos-delay="200">
-          <div class="counts icon-box">
-            <div class="count-box">
-              <span id="co">0</span>
-              <h3>ppm</h3>
-              <p>Karbon Monoksida (CO)</p>
+          <div class="icon-box">
+            <div class="counts">
+              <div class="count-box">
+                <span id="co">0</span>
+                <h3>ppm</h3>
+                <p>Karbon Monoksida (CO)</p>
+              </div>
             </div>
           </div>
         </div>
@@ -297,7 +299,7 @@ $currentUser = getCurrentUser();
           // Audio context for notifications (mobile-friendly)
           var audioCtx = null;
           var audioUnlocked = false;
-          
+
           // Unlock audio on first user interaction (required for mobile)
           function unlockAudio() {
             if (audioUnlocked) return;
@@ -311,56 +313,56 @@ $currentUser = getCurrentUser();
               source.start(0);
               audioUnlocked = true;
               console.log('Audio unlocked!');
-            } catch(e) {
+            } catch (e) {
               console.log('Audio unlock failed');
             }
           }
-          
+
           // Listen for first interaction to unlock audio
           document.addEventListener('click', unlockAudio, { once: true });
           document.addEventListener('touchstart', unlockAudio, { once: true });
-          
+
           // Play notification sound
           function playNotifSound() {
             try {
               if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
               }
-              
+
               // Resume if suspended (mobile requirement)
               if (audioCtx.state === 'suspended') {
                 audioCtx.resume();
               }
-              
+
               var oscillator = audioCtx.createOscillator();
               var gainNode = audioCtx.createGain();
-              
+
               oscillator.connect(gainNode);
               gainNode.connect(audioCtx.destination);
-              
+
               oscillator.frequency.value = 800; // Hz
               oscillator.type = 'sine';
               gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
               gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-              
+
               oscillator.start(audioCtx.currentTime);
               oscillator.stop(audioCtx.currentTime + 0.3);
-            } catch(e) {
+            } catch (e) {
               console.log('Audio not supported');
             }
           }
-          
+
           // Toast notification function
           function showToast(message, type) {
             // Remove existing toast
             $('.toast-notification').remove();
-            
+
             // Play sound
             playNotifSound();
-            
+
             // Create toast element with different colors based on type
             var iconClass, bgColor;
-            switch(type) {
+            switch (type) {
               case 'success': // ON actions - Green
                 iconClass = 'bi-check-circle-fill';
                 bgColor = 'linear-gradient(135deg, #00c853, #00a844)';
@@ -377,12 +379,12 @@ $currentUser = getCurrentUser();
                 iconClass = 'bi-info-circle-fill';
                 bgColor = 'linear-gradient(135deg, #6c757d, #495057)';
             }
-            
+
             var toast = $('<div class="toast-notification">' +
               '<i class="bi ' + iconClass + '"></i>' +
               '<span>' + message + '</span>' +
-            '</div>');
-            
+              '</div>');
+
             toast.css({
               'position': 'fixed',
               'bottom': '30px',
@@ -401,41 +403,41 @@ $currentUser = getCurrentUser();
               'z-index': '9999',
               'animation': 'slideInRight 0.4s ease'
             });
-            
+
             $('body').append(toast);
-            
+
             // Auto hide after 3 seconds
-            setTimeout(function() {
+            setTimeout(function () {
               toast.css('animation', 'slideOutRight 0.4s ease');
-              setTimeout(function() {
+              setTimeout(function () {
                 toast.remove();
               }, 400);
             }, 3000);
           }
-          
+
           function ajaxSet(params, message, type, cb) {
             $.get("control_set.php", params)
-              .done(function (resp) { 
+              .done(function (resp) {
                 showToast(message, type);
-                if (cb) cb(null, resp); 
+                if (cb) cb(null, resp);
               })
-              .fail(function (xhr) { 
+              .fail(function (xhr) {
                 showToast('Gagal mengubah pengaturan!', 'error');
-                if (cb) cb(xhr); 
+                if (cb) cb(xhr);
               });
           }
 
           function refreshControlStatus() {
             $.get("get_control.php").done(function (resp) {
               $("#controlStatus").text(resp);
-              
+
               // Parse response: mode=manual&purifier=0&humidifier=0
               var params = {};
-              resp.split('&').forEach(function(pair) {
+              resp.split('&').forEach(function (pair) {
                 var kv = pair.split('=');
                 params[kv[0]] = kv[1];
               });
-              
+
               // Update Mode buttons
               if (params.mode === 'auto') {
                 $("#modeAuto").addClass('active');
@@ -446,7 +448,7 @@ $currentUser = getCurrentUser();
                 $("#modeManual").addClass('active');
                 $("#statusBadge").removeClass('auto').addClass('manual');
               }
-              
+
               // Update Purifier buttons
               if (params.purifier === '1') {
                 $("#purOn").addClass('active');
@@ -455,7 +457,7 @@ $currentUser = getCurrentUser();
                 $("#purOn").removeClass('active');
                 $("#purOff").addClass('active');
               }
-              
+
               // Update Humidifier buttons
               if (params.humidifier === '1') {
                 $("#humOn").addClass('active');
@@ -464,7 +466,7 @@ $currentUser = getCurrentUser();
                 $("#humOn").removeClass('active');
                 $("#humOff").addClass('active');
               }
-              
+
             }).fail(function () { $("#controlStatus").text("Error"); });
           }
 
@@ -481,15 +483,30 @@ $currentUser = getCurrentUser();
             setInterval(refreshControlStatus, 5000);
           });
         </script>
-        
+
         <style>
           @keyframes slideInRight {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+            from {
+              transform: translateX(100%);
+              opacity: 0;
+            }
+
+            to {
+              transform: translateX(0);
+              opacity: 1;
+            }
           }
+
           @keyframes slideOutRight {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(100%); opacity: 0; }
+            from {
+              transform: translateX(0);
+              opacity: 1;
+            }
+
+            to {
+              transform: translateX(100%);
+              opacity: 0;
+            }
           }
         </style>
         <!-- END Control panel -->

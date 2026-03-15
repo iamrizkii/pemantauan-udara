@@ -172,7 +172,6 @@ $currentUser = getCurrentUser();
             <tr>
               <th>No. </th>
               <th>Waktu</th>
-              <th>Suhu</th>
               <th>CO</th>
               <th>CO2</th>
               <th>kelembaban</th>
@@ -195,7 +194,6 @@ $currentUser = getCurrentUser();
               <tr>
                 <td><?= $nomor++ ?></td>
                 <td><?= $d['waktu'] ?></td>
-                <td><?= $d['suhu'] ?></td>
                 <td><?= $d['co'] ?></td>
                 <td><?= $d['co2'] ?></td>
                 <td><?= $d['kelembaban'] ?></td>

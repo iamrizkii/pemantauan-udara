@@ -256,24 +256,23 @@ $currentUser = getCurrentUser();
                 </div>
               </div>
 
-            <!-- Purifier Control -->
-            <div class="control-item">
-              <div class="control-item-header">
-                <i class="bi bi-wind"></i>
-                <span>Air Purifier</span>
+              <!-- Purifier Control -->
+              <div class="control-item">
+                <div class="control-item-header">
+                  <i class="bi bi-wind"></i>
+                  <span>Air Purifier</span>
+                </div>
+                <div class="control-buttons">
+                  <button id="purOn" class="ctrl-btn ctrl-btn-on">
+                    <i class="bi bi-power"></i>
+                    <span>ON</span>
+                  </button>
+                  <button id="purOff" class="ctrl-btn ctrl-btn-off">
+                    <i class="bi bi-stop-circle"></i>
+                    <span>OFF</span>
+                  </button>
+                </div>
               </div>
-              <div class="control-buttons">
-                <button id="purOff" class="ctrl-btn ctrl-btn-off">
-                  <i class="bi bi-stop-circle"></i>
-                  <span>OFF</span>
-                </button>
-                <button id="purOn" class="ctrl-btn ctrl-btn-on">
-                  <i class="bi bi-power"></i>
-                  <span>ON</span>
-                </button>
-              </div>
-            </div>
-
 
               <!-- Humidifier Control -->
               <div class="control-item">

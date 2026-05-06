@@ -131,7 +131,7 @@ $currentUser = getCurrentUser();
 
       <nav id="navbar" class="navbar">
         <ul>
-          <li><a class="nav-link" href=".">Home gua</a></li>
+          <li><a class="nav-link" href=".">Home</a></li>
           <li><a class="nav-link" href="history.php">History</a></li>
           <li class="dropdown">
             <a href="#"><i class="bi bi-person-circle"></i> <?= htmlspecialchars($currentUser['nama']) ?> <i

@@ -54,7 +54,7 @@ $himbauan = "Status tidak dikenali, periksa sistem.";
 
 // Aturan himbauan berdasarkan keterangan (sesuaikan kata2 bila perlu)
 if (strcasecmp($keterangan, 'Baik') === 0) {
-    $himbauan = "Kualitas udara baik, dapat beraktivitas dengan normal.";
+    $himbauan = "";
 } elseif (strcasecmp($keterangan, 'Buruk') === 0) {
     $himbauan = "Kualitas udara buruk, kurangi aktivitas berat dan pastikan purifier aktif.";
 } elseif (strcasecmp($keterangan, 'Tidak Lengkap') === 0) {

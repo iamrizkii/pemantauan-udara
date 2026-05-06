@@ -24,7 +24,6 @@ if ($keterangan === '') {
     if (strcasecmp($keterangan, 'Baik') === 0) {
         $kualitas = "<div class='baik'>
                         <h1>Kualitas Udara: Baik</h1>
-                        <p>Semua parameter berada dalam rentang aman.</p>
                      </div>";
     } elseif (strcasecmp($keterangan, 'Buruk') === 0) {
         $kualitas = "<div class='buruk'>

@@ -73,6 +73,26 @@ $currentUser = getCurrentUser();
       margin-left: 0.5rem;
     }
 
+    .icon-box {
+      height: 100%;
+    }
+
+    .icon-box .counts {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      min-height: 160px;
+    }
+
+    .icon-box .count-box {
+      text-align: center;
+    }
+
+    .row.icon-boxes > div {
+      display: flex;
+    }
+
     @media (max-width:767px) {
       .time-row {
         flex-direction: column;
@@ -163,10 +183,7 @@ $currentUser = getCurrentUser();
               <!-- suhu utama di header (ID #suhu dipakai oleh ajax, hidden dari tampilan) -->
               <div style="display:none;">
                 <span class="suhu-large"><span id="suhu">0</span>°C</span>
-              </div>
-              <!-- kelembaban header (ID baru #kelembaban_header) -->
-              <div style="display:inline-block;">
-                <span class="hum-small">Kelembaban: <span id="kelembaban_header">0</span>%</span>
+                <span id="kelembaban_header">0</span>
               </div>
             </div>
           </div>

@@ -96,6 +96,8 @@ $currentUser = getCurrentUser();
 
     .sensor-cards > div {
       display: flex;
+      flex: 0 0 25%;
+      max-width: 25%;
     }
 
     .sensor-card {
@@ -104,11 +106,26 @@ $currentUser = getCurrentUser();
       align-items: center;
       justify-content: center;
       min-height: 160px;
+      box-sizing: border-box;
     }
 
     .sensor-card .counts {
       width: 100%;
       min-height: unset;
+    }
+
+    @media (max-width: 992px) {
+      .sensor-cards > div {
+        flex: 0 0 50%;
+        max-width: 50%;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .sensor-cards > div {
+        flex: 0 0 50%;
+        max-width: 50%;
+      }
     }
 
     .row.icon-boxes > div {

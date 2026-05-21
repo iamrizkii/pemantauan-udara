@@ -89,6 +89,28 @@ $currentUser = getCurrentUser();
       text-align: center;
     }
 
+    /* sensor cards: sama lebar & tinggi */
+    .sensor-cards {
+      align-items: stretch;
+    }
+
+    .sensor-cards > div {
+      display: flex;
+    }
+
+    .sensor-card {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 160px;
+    }
+
+    .sensor-card .counts {
+      width: 100%;
+      min-height: unset;
+    }
+
     .row.icon-boxes > div {
       display: flex;
     }
@@ -202,51 +224,55 @@ $currentUser = getCurrentUser();
       </div>
 
       <div class="row icon-boxes mt-4">
-        <div class="col-md-6 col-lg-3" data-aos="zoom-in" data-aos-delay="200">
-          <div class="icon-box">
-            <div class="counts">
-              <div class="count-box">
-                <span id="co">0</span>
-                <h3>ppm</h3>
-                <p>Karbon Monoksida (CO)</p>
+        <div class="col-12 mb-3">
+          <div class="row sensor-cards g-3">
+            <div class="col-6 col-lg-3" data-aos="zoom-in" data-aos-delay="200">
+              <div class="icon-box sensor-card">
+                <div class="counts">
+                  <div class="count-box">
+                    <span id="co">0</span>
+                    <h3>ppm</h3>
+                    <p>Karbon Monoksida (CO)</p>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        <div class="col-md-6 col-lg-3" data-aos="zoom-in" data-aos-delay="300">
-          <div class="icon-box">
-            <div class="counts">
-              <div class="count-box">
-                <span id="co2">0</span>
-                <h3>ppm</h3>
-                <p>Karbon Dioksida (CO2)</p>
+            <div class="col-6 col-lg-3" data-aos="zoom-in" data-aos-delay="300">
+              <div class="icon-box sensor-card">
+                <div class="counts">
+                  <div class="count-box">
+                    <span id="co2">0</span>
+                    <h3>ppm</h3>
+                    <p>Karbon Dioksida (CO2)</p>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        <!-- Kelembaban -->
-        <div class="col-md-6 col-lg-3" data-aos="zoom-in" data-aos-delay="400">
-          <div class="icon-box">
-            <div class="counts">
-              <div class="count-box">
-                <span id="kelembaban">0</span>
-                <h3>%</h3>
-                <p>Kelembaban</p>
+            <!-- Kelembaban -->
+            <div class="col-6 col-lg-3" data-aos="zoom-in" data-aos-delay="400">
+              <div class="icon-box sensor-card">
+                <div class="counts">
+                  <div class="count-box">
+                    <span id="kelembaban">0</span>
+                    <h3>%</h3>
+                    <p>Kelembaban</p>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        <!-- Debu -->
-        <div class="col-md-6 col-lg-3" data-aos="zoom-in" data-aos-delay="500">
-          <div class="icon-box">
-            <div class="counts">
-              <div class="count-box">
-                <span id="debu">0</span>
-                <h3>mg/m3</h3>
-                <p>Debu (PM10)</p>
+            <!-- Debu -->
+            <div class="col-6 col-lg-3" data-aos="zoom-in" data-aos-delay="500">
+              <div class="icon-box sensor-card">
+                <div class="counts">
+                  <div class="count-box">
+                    <span id="debu">0</span>
+                    <h3>mg/m3</h3>
+                    <p>Debu (PM10)</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

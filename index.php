@@ -185,7 +185,7 @@ $currentUser = getCurrentUser();
       </div>
 
       <div class="row icon-boxes mt-4">
-        <div class="col-md-6 col-lg-4" data-aos="zoom-in" data-aos-delay="200">
+        <div class="col-md-6 col-lg-3" data-aos="zoom-in" data-aos-delay="200">
           <div class="icon-box">
             <div class="counts">
               <div class="count-box">
@@ -197,7 +197,7 @@ $currentUser = getCurrentUser();
           </div>
         </div>
 
-        <div class="col-md-6 col-lg-4" data-aos="zoom-in" data-aos-delay="300">
+        <div class="col-md-6 col-lg-3" data-aos="zoom-in" data-aos-delay="300">
           <div class="icon-box">
             <div class="counts">
               <div class="count-box">
@@ -209,8 +209,21 @@ $currentUser = getCurrentUser();
           </div>
         </div>
 
+        <!-- Kelembaban -->
+        <div class="col-md-6 col-lg-3" data-aos="zoom-in" data-aos-delay="400">
+          <div class="icon-box">
+            <div class="counts">
+              <div class="count-box">
+                <span id="kelembaban">0</span>
+                <h3>%</h3>
+                <p>Kelembaban</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Debu -->
-        <div class="col-md-6 col-lg-4" data-aos="zoom-in" data-aos-delay="500">
+        <div class="col-md-6 col-lg-3" data-aos="zoom-in" data-aos-delay="500">
           <div class="icon-box">
             <div class="counts">
               <div class="count-box">

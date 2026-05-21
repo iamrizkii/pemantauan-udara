@@ -4,12 +4,17 @@
 
 include 'config.php';
 
+// Set timezone PHP ke WIB
+date_default_timezone_set('Asia/Makassar');
+
 // koneksi DB
 $connect = mysqli_connect("localhost", "u182036527_udarasehat", "Fatihur5*", "u182036527_udarasehat");
 if (!$connect) {
     http_response_code(500);
     die("DB connect error");
 }
+// Set timezone ke WIB (UTC+7)
+mysqli_query($connect, "SET time_zone = '+08:00'");
 
 // helper
 function to_num($v)
@@ -56,13 +61,14 @@ if ($co !== null || $co2 !== null || $kelembaban !== null || $debu !== null || $
 
     // sensor: co, co2, debu, kelembaban, keterangan, waktu
     // di sini kita isi dulu co, co2, kelembaban, debu
-    $stmt = $connect->prepare("INSERT INTO sensor (co, co2, kelembaban, debu) VALUES (?, ?, ?, ?)");
+    $waktu_now = date('Y-m-d H:i:s');
+    $stmt = $connect->prepare("INSERT INTO sensor (co, co2, kelembaban, debu, waktu) VALUES (?, ?, ?, ?, ?)");
     if (!$stmt) {
         http_response_code(500);
         die("DB prepare error (sensor): " . $connect->error);
     }
 
-    $stmt->bind_param('dddd', $co_v, $co2_v, $kelembaban_v, $debu_v);
+    $stmt->bind_param('dddds', $co_v, $co2_v, $kelembaban_v, $debu_v, $waktu_now);
     if (!$stmt->execute()) {
         http_response_code(500);
         echo "Failed menyimpan sensor: " . $stmt->error;

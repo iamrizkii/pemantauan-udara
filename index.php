@@ -1,5 +1,6 @@
 <?php
 require_once 'config.php';
+date_default_timezone_set('Asia/Makassar');
 requireLogin();
 $currentUser = getCurrentUser();
 ?>
@@ -121,7 +122,7 @@ $currentUser = getCurrentUser();
 </head>
 
 <body>
-  <?php date_default_timezone_set("Asia/Jakarta"); ?>
+  <?php // timezone sudah di-set di atas ?>
 
   <!-- ======= Header ======= -->
   <header id="header" class="fixed-top">
@@ -528,17 +529,19 @@ $currentUser = getCurrentUser();
   <script src="assets/vendor/php-email-form/validate.js"></script>
 
   <script type="text/javascript">
-    // jam live
+    // jam live — sinkron dari server PHP agar sama dengan waktu di history
+    var serverTime = new Date("<?php echo date('Y-m-d H:i:s'); ?>");
+    var clientStart = Date.now();
+
     window.onload = function () { waktu(); }
     function waktu() {
-      var e = document.getElementById('waktu'),
-        d = new Date(), h, m, s;
-      h = d.getHours();
-      m = setZero(d.getMinutes());
-      s = setZero(d.getSeconds());
-
+      var e = document.getElementById('waktu');
+      var elapsed = Date.now() - clientStart;
+      var now = new Date(serverTime.getTime() + elapsed);
+      var h = now.getHours();
+      var m = setZero(now.getMinutes());
+      var s = setZero(now.getSeconds());
       e.innerHTML = h + ':' + m + ':' + s;
-
       setTimeout(waktu, 1000);
     }
     function setZero(e) {

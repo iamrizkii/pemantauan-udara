@@ -92,6 +92,8 @@ $currentUser = getCurrentUser();
     /* sensor cards: sama lebar & tinggi */
     .sensor-cards {
       align-items: stretch;
+      width: 100%;
+      margin: 0;
     }
 
     .sensor-cards > div {
@@ -241,7 +243,7 @@ $currentUser = getCurrentUser();
       </div>
 
       <div class="row icon-boxes mt-4">
-        <div class="col-12 mb-3">
+        <div class="col-12">
           <div class="row sensor-cards g-3">
             <div class="col-6 col-lg-3" data-aos="zoom-in" data-aos-delay="200">
               <div class="icon-box sensor-card">
@@ -294,8 +296,11 @@ $currentUser = getCurrentUser();
             </div>
           </div>
         </div>
-        <!-- START Control panel -->
-        <div class="col-12 mt-4" data-aos="fade-up" data-aos-delay="400">
+      </div>
+
+      <!-- START Control panel -->
+      <div class="row mt-4">
+        <div class="col-12" data-aos="fade-up" data-aos-delay="400">
           <div class="control-card-modern">
             <div class="control-header">
               <div class="control-icon">
@@ -585,8 +590,8 @@ $currentUser = getCurrentUser();
         </style>
         <!-- END Control panel -->
 
-
-      </div> <!-- akhir row icon-boxes -->
+      </div><!-- akhir col-12 kontrol -->
+      </div><!-- akhir row kontrol -->
 
     </div>
   </section>
